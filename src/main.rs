@@ -1,8 +1,14 @@
 mod drawing;
+mod gameplay;
+
 extern crate gtk;
 use std::{ thread, time };
+use gameplay::Game;
 use gtk::prelude::*;
 use gtk::{ Application, ApplicationWindow };
+use std::sync::{Arc, Mutex};
+
+const GRID_SIZE: usize = 5;
 
 fn app_fn(app: &gtk::Application) {
     let win = ApplicationWindow::builder()
@@ -14,20 +20,21 @@ fn app_fn(app: &gtk::Application) {
 
     let area = gtk::DrawingArea::new();
     let frame = gtk::Frame::new(None);
+    let mut field = Arc::new(Mutex::new(gameplay::Field::new(GRID_SIZE)));
+    field.lock().unwrap().init();
+
     area.connect_draw(move |drawing_area, context| {
+        const dt:f64 = 1000.0;
         let window = drawing_area.window().unwrap();
         let width = window.width();
         let height = window.height();
         
-        context.set_source_rgb(0.0, 0.0, 0.0);
-        
         drawing::draw_board(&context, width, height);
-        context.fill().unwrap();
-        drawing::draw_grid(&context, width, height);
-
-        context.stroke().unwrap();
+        drawing::draw_grid(&field.lock().unwrap(), &context, width, height);
+        field.lock().unwrap().tick(dt);
+        
         drawing_area.queue_draw();
-        thread::sleep(time::Duration::from_millis(1000 / 60));
+        thread::sleep(time::Duration::from_millis(dt.round() as u64));
         //println!("123");
         gtk::Inhibit(false)
     });

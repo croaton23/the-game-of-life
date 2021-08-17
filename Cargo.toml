@@ -1,5 +1,5 @@
 [package]
-name = "tetris"
+name = "game-of-life"
 version = "0.1.0"
 authors = ["croaton <dmytro.shervarly@gmail.com>"]
 edition = "2018"
@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 gtk = "^0.14.0"
+rand = "0.8"
