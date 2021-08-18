@@ -25,12 +25,12 @@ pub fn draw_grid(field: &Field, context: &Context, width:i32, height:i32)
     let cell_height: i32 = (height - 2 * BORDER_SIZE) / grid_size;
     context.set_source_rgb(255.0, 255.0, 255.0);
 
-    for i in 1..(grid_size + 1) {
+    for i in 0..grid_size {
         context.move_to(f64::from(BORDER_SIZE + i * cell_width), f64::from(BORDER_SIZE));
         context.line_to(f64::from(BORDER_SIZE + i * cell_width), f64::from(height - BORDER_SIZE));
     }
 
-    for i in 1..(grid_size + 1) {
+    for i in 0..grid_size {
         context.move_to(f64::from(BORDER_SIZE), f64::from(BORDER_SIZE + i * cell_height));
         context.line_to(f64::from(width - BORDER_SIZE), f64::from(BORDER_SIZE + i * cell_height));
     }
@@ -38,9 +38,9 @@ pub fn draw_grid(field: &Field, context: &Context, width:i32, height:i32)
 
     context.set_source_rgb(0.0, 0.0, 255.0);
 
-    for i in 1..field.size {
-        for j in 1..field.size {
-            println!("{}", field.field[i][j]);
+    for i in 0..field.size {
+        for j in 0..field.size {
+            // println!("{}", field.field[i][j]);
             if field.field[i][j] == 1 {
             context.rectangle(
                 f64::from(BORDER_SIZE + (i as i32) * cell_width), 
@@ -48,27 +48,7 @@ pub fn draw_grid(field: &Field, context: &Context, width:i32, height:i32)
                 f64::from(cell_width), f64::from(cell_height));
             }
         }
-        println!();
+        // println!();
     }
     context.fill().unwrap();
 }
-
-// pub fn draw_start_point(field: &Field, context: &Context, width:i32, height:i32)
-// {
-//     let grid_size = field.size as i32;
-
-//     let x = rand::thread_rng().gen_range(0..grid_size);
-//     let y = rand::thread_rng().gen_range(0..grid_size);
-
-//     let cell_width: i32 = (width - 2 * BORDER_SIZE) / grid_size;
-//     let cell_height: i32 = (height - 2 * BORDER_SIZE) / grid_size;
-
-//     context.set_source_rgb(0.0, 0.0, 255.0);
-
-//     context.rectangle(
-//         f64::from(BORDER_SIZE + x * cell_width), 
-//         f64::from(BORDER_SIZE + y * cell_height), 
-//         f64::from(cell_width), f64::from(cell_height));
-    
-//     context.fill().unwrap();
-// }
