@@ -33,24 +33,25 @@ impl Game for Field {
             copy.push(row.clone());
         }
 
-        for i in 1..self.size {
-            for j in 1..self.size {
-                let mut neighbours:Vec<(usize,usize)> = vec![
-                    (i - 1, j - 1), (i, j - 1), (i - 1, j),
-                    (i + 1, j - 1), (i - i, j + 1),
-                    (i + 1, j + 1), (i, j + 1), (i + 1, j)
+        for i in 0..self.size {
+            for j in 0..self.size {
+                let mut neighbours:Vec<(i32,i32)> = vec![
+                    (i as i32 - 1, j as i32  - 1), (i as i32 , j as i32  - 1), (i as i32  - 1, j as i32 ),
+                    (i  as i32 + 1, j  as i32 - 1), (i  as i32 - 1, j  as i32 + 1),
+                    (i  as i32 + 1, j  as i32 + 1), (i as i32 , j as i32  + 1), (i as i32  + 1, j as i32 )
                 ];
-                neighbours.retain(|&n| n.0 > 0 && n.1 > 0 && n.0 < self.size && n.1 < self.size);
-                let neighbourValues: Vec<i32> = neighbours.iter()
-                    .map(|&n| copy[n.0][n.1])
+                
+                neighbours.retain(|&n| n.0 >= 0 && n.1 >= 0 && n.0 < self.size as i32 && n.1 < self.size as i32);
+                let neighbour_values: Vec<i32> = neighbours.iter()
+                    .map(|&n| copy[n.0 as usize][n.1 as usize])
                     .collect();
 
-                let amount:i32 = neighbourValues.iter().sum();
+                let amount:i32 = neighbour_values.iter().sum();
                 let alive:bool = copy[i][j] == 1;
                 if (amount < 2 || amount > 3) && alive {
                     self.field[i][j] = 0;
                 }
-                if amount == 3 && !alive {
+                if amount == 1 && !alive {
                     self.field[i][j] = 1;
                 }
             }
