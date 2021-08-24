@@ -19,20 +19,17 @@ pub fn draw_board(context: &Context, width:i32, height:i32)
 
 pub fn draw_grid(field: &Field, context: &Context, width:i32, height:i32)
 {
-    let grid_size = field.size as i32;
+    let grid_size = field.size as f64;
 
-    let cell_width: i32 = (width - 2 * BORDER_SIZE) / grid_size;
-    let cell_height: i32 = (height - 2 * BORDER_SIZE) / grid_size;
+    let cell_width: f64 = f64::from(width - 2 * BORDER_SIZE) / grid_size;
+    let cell_height: f64 = f64::from(height - 2 * BORDER_SIZE) / grid_size;
     context.set_source_rgb(255.0, 255.0, 255.0);
 
-    for i in 0..grid_size {
-        context.move_to(f64::from(BORDER_SIZE + i * cell_width), f64::from(BORDER_SIZE));
-        context.line_to(f64::from(BORDER_SIZE + i * cell_width), f64::from(height - BORDER_SIZE));
-    }
-
-    for i in 0..grid_size {
-        context.move_to(f64::from(BORDER_SIZE), f64::from(BORDER_SIZE + i * cell_height));
-        context.line_to(f64::from(width - BORDER_SIZE), f64::from(BORDER_SIZE + i * cell_height));
+    for i in 0..field.size + 1 {
+        context.move_to(BORDER_SIZE as f64 + i as f64 * cell_width, f64::from(BORDER_SIZE));
+        context.line_to(BORDER_SIZE as f64 + i as f64 * cell_width, f64::from(height - BORDER_SIZE));
+        context.move_to(f64::from(BORDER_SIZE), BORDER_SIZE as f64 + i as f64 * cell_height);
+        context.line_to(f64::from(width - BORDER_SIZE), BORDER_SIZE as f64 + i as f64 * cell_height);
     }
     context.stroke().unwrap();
 
@@ -40,15 +37,13 @@ pub fn draw_grid(field: &Field, context: &Context, width:i32, height:i32)
 
     for i in 0..field.size {
         for j in 0..field.size {
-            // println!("{}", field.field[i][j]);
             if field.field[i][j] == 1 {
             context.rectangle(
-                f64::from(BORDER_SIZE + (i as i32) * cell_width), 
-                f64::from(BORDER_SIZE + (j as i32) * cell_height), 
-                f64::from(cell_width), f64::from(cell_height));
+                BORDER_SIZE as f64 + (i as f64 + 0.1) * cell_width, 
+                BORDER_SIZE as f64 + (j as f64 + 0.1) * cell_height, 
+                cell_width * 0.8, cell_height * 0.8);
             }
         }
-        // println!();
     }
     context.fill().unwrap();
 }

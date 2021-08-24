@@ -8,7 +8,7 @@ use gtk::prelude::*;
 use gtk::{ Application, ApplicationWindow };
 use std::sync::{Arc, Mutex};
 
-const GRID_SIZE: usize = 5;
+const GRID_SIZE: usize = 10;
 
 fn app_fn(app: &gtk::Application) {
     let win = ApplicationWindow::builder()
@@ -20,7 +20,7 @@ fn app_fn(app: &gtk::Application) {
 
     let area = gtk::DrawingArea::new();
     let frame = gtk::Frame::new(None);
-    let mut field = Arc::new(Mutex::new(gameplay::Field::new(GRID_SIZE)));
+    let field = Arc::new(Mutex::new(gameplay::Field::new(GRID_SIZE)));
     field.lock().unwrap().init();
 
     area.connect_draw(move |drawing_area, context| {
@@ -35,7 +35,6 @@ fn app_fn(app: &gtk::Application) {
         
         drawing_area.queue_draw();
         thread::sleep(time::Duration::from_millis(dt.round() as u64));
-        //println!("123");
         gtk::Inhibit(false)
     });
 
@@ -46,7 +45,7 @@ fn app_fn(app: &gtk::Application) {
 
 fn main() {
     let app = Application::builder()
-        .application_id("org.example.HelloWorld")
+        .application_id("The Game of Life")
         .build();
 
     app.connect_activate(app_fn);
